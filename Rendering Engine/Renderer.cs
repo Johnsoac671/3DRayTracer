@@ -31,15 +31,10 @@ namespace Rendering_Engine
                 Console.WriteLine($"Rendering Line: {j+1}");
                 for (int i = 0; i < this.height; i++)
                 {
-                    double r = (double)i / (this.width - 1);
-                    double g = (double)j / (this.height - 1);
-                    double b = 0;
 
-                    int ir = (int)(r * 255.999);
-                    int ig = (int)(g * 255.999);
-                    int ib = (int)(b * 255.999);
+                    Vector3 color = new Vector3((double)i / (this.width - 1), (double)j / (this.height - 1), 0);
 
-                    int[] pixel = [ir, ig, ib];
+                    int[] pixel = color.ToRGB();
                     pixels[i * this.width + j] = pixel;
                 }
 

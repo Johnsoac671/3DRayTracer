@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace Rendering_Engine
 {
-    using ColorVec = Vector3;
-    using PointVec = Vector3;
 
     internal class Vector3
     {
@@ -75,6 +73,15 @@ namespace Rendering_Engine
             }
         }
 
+        public int[] ToRGB()
+        {
+            int ir = Math.Clamp((int)(this.X * 255.999), 0, 255);
+            int ig = Math.Clamp((int)(this.Y * 255.999), 0, 255);
+            int ib = Math.Clamp((int)(this.Z * 255.999), 0, 255);
+
+            return new int[] { ir, ig, ib };
+        }
+
 
 
         public static double Dot(Vector3 v1, Vector3 v2)
@@ -93,7 +100,6 @@ namespace Rendering_Engine
         {
             return v / v.Length;
         }
-
 
         public static Vector3 operator -(Vector3 v)
         {
