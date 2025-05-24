@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Rendering_Engine
 {
 
-    internal class Vector3
+    public class Vector3
     {
         private double[] values;
 
