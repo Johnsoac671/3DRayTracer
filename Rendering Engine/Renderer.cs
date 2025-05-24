@@ -28,6 +28,7 @@ namespace Rendering_Engine
 
             for (int j = 0; j < this.width; j++)
             {
+                Console.WriteLine($"Rendering Line: {j+1}");
                 for (int i = 0; i < this.height; i++)
                 {
                     double r = (double)i / (this.width - 1);
