@@ -1,4 +1,6 @@
-﻿using System;
+﻿global using Point3 = Rendering_Engine.Vector3;
+global using Color3 = Rendering_Engine.Vector3;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace Rendering_Engine
 {
-
+    
     public class Vector3
     {
+
         private double[] values;
 
         public Vector3(double x, double y, double z)

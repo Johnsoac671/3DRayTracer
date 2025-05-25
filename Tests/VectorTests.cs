@@ -127,5 +127,23 @@ namespace Tests
 
             Assert.That(v.SquaredLength, Is.EqualTo(25));
         }
+
+        [Test]
+        public void RayPointAtTime()
+        {
+            Vector3 p = new Vector3(2.0, 2.0, 2.0);
+            Vector3 d = new Vector3(1.0, 2.0, 1.0);
+
+            Ray r = new Ray(p, d);
+
+            Vector3 w = r.PointAtTime(3);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(w.X, Is.EqualTo(5.0));
+                Assert.That(w.Y, Is.EqualTo(8.0));
+                Assert.That(w.Z, Is.EqualTo(5.0));
+            });
+        }
     }
 }

@@ -32,7 +32,7 @@ namespace Rendering_Engine
                 for (int i = 0; i < this.height; i++)
                 {
 
-                    Vector3 color = new Vector3((double)i / (this.width - 1), (double)j / (this.height - 1), 0);
+                    Color3 color = new Color3((double)i / (this.width - 1), (double)j / (this.height - 1), 0);
 
                     int[] pixel = color.ToRGB();
                     pixels[i * this.width + j] = pixel;
