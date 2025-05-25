@@ -18,7 +18,7 @@ namespace Rendering_Engine.Primitives
             this.radius = radius;
         }
 
-        public bool IsHit(Ray r, double tmin, double tmax, HitRecord record)
+        public bool IsHit(Ray r, double tmin, double tmax, ref HitRecord record)
         {
             Vector3 oc = this.center - r.Origin;
             var a = r.Direction.SquaredLength;
@@ -38,7 +38,7 @@ namespace Rendering_Engine.Primitives
 
             if (root <= tmin || tmax <= root)
             {
-                root = (h - sqrtD) / a;
+                root = (h + sqrtD) / a;
                 if (root <= tmin || tmax <= root)
                 {
                     return false;

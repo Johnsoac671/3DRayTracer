@@ -118,7 +118,7 @@ namespace Rendering_Engine
         private Color3 CalculateRayColor(Ray ray, IRenderable world)
         {
             HitRecord record = new HitRecord();
-            if (world.IsHit(ray, 0, double.PositiveInfinity, record))
+            if (world.IsHit(ray, 0, double.PositiveInfinity, ref record))
             {
                 return 0.5 * (record.Normal + new Color3(1, 1, 1));
             }
