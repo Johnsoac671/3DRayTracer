@@ -15,21 +15,22 @@ namespace Rendering_Engine
         private double viewportWidth;
         private double viewportHeight;
 
-        private double aspect_ratio;
+        private double aspectRatio;
+        private double focalLength;
 
         private OutputManager outputManager;
 
 
 
-        public Renderer(double aspect_ratio, int width)
+        public Renderer(double aspectRatio, int width)
         {
             this.imageWidth = width;
-            this.aspect_ratio = aspect_ratio;
+            this.aspectRatio = aspectRatio;
 
-            this.imageHeight = Math.Max((int)(width / aspect_ratio), 1);
+            this.imageHeight = Math.Max((int)(width / aspectRatio), 1);
 
             this.viewportHeight = 2.0;
-            this.viewportWidth = viewportHeight * ((double)imageWidth / imageWidth);
+            this.viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
 
             this.outputManager = new OutputManager();
         }
@@ -37,6 +38,18 @@ namespace Rendering_Engine
 
         public void Render()
         {
+            double focalLength = 1.0;
+            Point3 cameraCenter = new Point3(0, 0, 0);
+
+            Vector3 viewportU = new Vector3(viewportWidth, 0, 0);
+            Vector3 viewportV = new Vector3(0, -viewportHeight, 0);
+
+            Vector3 pixelDeltaU = viewportU / imageWidth;
+            Vector3 pixelDeltaV = viewportV / imageHeight;
+
+            Vector3 viewportStart = cameraCenter - new Vector3(0, 0, focalLength) - viewportU/2 - viewportV/2;
+            Vector3 pixel00Location = viewportStart + 0.5 * (pixelDeltaU + pixelDeltaV);
+
             Console.WriteLine("Rendering image...");
             int[][] pixels = new int[imageWidth * imageHeight][];
 
@@ -46,7 +59,11 @@ namespace Rendering_Engine
                 for (int i = 0; i < this.imageHeight; i++)
                 {
 
-                    Color3 color = new Color3((double)i / (this.imageWidth - 1), (double)j / (this.imageHeight - 1), 0);
+                    Vector3 pixelCenter = pixel00Location + j*pixelDeltaU + i*pixelDeltaV;
+                    Vector3 rayDirection = pixelCenter - cameraCenter;
+                    Ray ray = new Ray(cameraCenter, rayDirection);
+
+                    Color3 color = CalculateRayColor(ray);
 
                     int[] pixel = color.ToRGB();
                     pixels[i * this.imageWidth + j] = pixel;
@@ -55,6 +72,14 @@ namespace Rendering_Engine
             }
 
             this.outputManager.WriteOutput(this.imageHeight, this.imageWidth, pixels);
+        }
+
+        private Color3 CalculateRayColor(Ray ray)
+        {
+            Vector3 unitDirection = Vector3.UnitVector(ray.Direction);
+            double a = 0.5 * (unitDirection.Y + 1.0);
+
+            return (1.0 - a) * new Color3(1.0, 1.0, 1.0) + a * new Color3(0.5, 0.7, 1.0);
         }
 
     }

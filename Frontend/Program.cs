@@ -10,7 +10,7 @@ namespace Frontend
     {
         public static void Main(string[] args)
         {
-            Renderer render = new Renderer(16 / 9, 256);
+            Renderer render = new Renderer(16.0 / 9.0, 256);
             render.Render();
         }
 
