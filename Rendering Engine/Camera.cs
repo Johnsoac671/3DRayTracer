@@ -37,9 +37,6 @@ namespace Rendering_Engine
             this.focalLength = 1.0;
             center = new Point3(0, 0, 0);
 
-            this.world = new RenderableList();
-            this.world.Add(new Sphere(new Point3(0, 0, -1), 0.5));
-            this.world.Add(new Sphere(new Point3(0, -100.5, -1), 100));
         }
 
         public int ImageWidth
@@ -58,7 +55,7 @@ namespace Rendering_Engine
             }
         }
 
-        public int[][] Render()
+        public int[][] Render(RenderableList world)
         {
 
             Vector3 viewportU = new Vector3(this.viewportWidth, 0, 0);

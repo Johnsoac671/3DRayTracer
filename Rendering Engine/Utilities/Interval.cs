@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rendering_Engine.Utilities
 {
-    internal class Interval
+    public class Interval
     {
         public double Min {  get; set; }
         public double Max { get; set; }

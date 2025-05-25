@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rendering_Engine.Utilities
 {
-    internal interface IRenderable
+    public interface IRenderable
     {
         public bool IsHit(Ray r, Interval rayT, ref HitRecord record);
     }

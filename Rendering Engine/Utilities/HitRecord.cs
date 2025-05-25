@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rendering_Engine.Utilities
 {
-    internal class HitRecord
+    public class HitRecord
     {
         private Point3 location;
         private Vector3 normal;

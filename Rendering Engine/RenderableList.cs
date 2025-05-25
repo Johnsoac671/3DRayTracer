@@ -7,7 +7,7 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine
 {
-    internal class RenderableList : IRenderable
+    public class RenderableList : IRenderable
     {
         public List<IRenderable> Objects {  get; private set; }
 
