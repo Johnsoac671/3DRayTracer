@@ -90,11 +90,11 @@ namespace Rendering_Engine
         private double HitSphere(Point3 sphereCenter, double radius, Ray r)
         {
             Vector3 oc = sphereCenter - r.Origin;
-            var a = Vector3.Dot(r.Direction, r.Direction);
-            var b = -2.0 * Vector3.Dot(r.Direction, oc);
-            var c = Vector3.Dot(oc, oc) - radius * radius;
+            var a = r.Direction.SquaredLength;
+            var h = Vector3.Dot(r.Direction, oc);
+            var c = oc.SquaredLength - radius*radius;
 
-            var discriminant = b * b - 4 * a * c;
+            var discriminant = h*h - a*c;
             
             if (discriminant < 0)
             {
@@ -102,7 +102,7 @@ namespace Rendering_Engine
             }
             else
             {
-                return ((-b - Math.Sqrt(discriminant)) / (2.0 * a));
+                return (h - Math.Sqrt(discriminant)) / a;
             }
         }
 
