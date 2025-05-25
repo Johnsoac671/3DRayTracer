@@ -113,6 +113,31 @@ namespace Tests
         }
 
         [Test]
+        public void VectorDotProduct()
+        {
+            Vector3 v = new Vector3(2.0, 2.0, 2.0);
+            Vector3 u = new Vector3(3.0, 2.0, 1.0);
+            double t = Vector3.Dot(v, u);
+
+            Assert.That(t, Is.EqualTo(12));
+        }
+
+        [Test]
+        public void VectorCrossProduct()
+        {
+            Vector3 v = new Vector3(2.0, 2.0, 2.0);
+            Vector3 u = new Vector3(3.0, 2.0, 1.0);
+            Vector3 w = Vector3.Cross(v, u);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(w.X, Is.EqualTo(-2.0));
+                Assert.That(w.Y, Is.EqualTo(4.0));
+                Assert.That(w.Z, Is.EqualTo(-2.0));
+            });
+        }
+
+        [Test]
         public void Length()
         {
             Vector3 v = new Vector3(3.0, 4.0, 0.0);
