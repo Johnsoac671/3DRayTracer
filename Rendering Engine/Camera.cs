@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Rendering_Engine.Primitives;
 using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine
@@ -20,6 +22,8 @@ namespace Rendering_Engine
 
         Point3 center;
 
+        private RenderableList world;
+
         public Camera(double aspectRatio, int width)
         {
             this.imageWidth = width;
@@ -32,6 +36,10 @@ namespace Rendering_Engine
 
             this.focalLength = 1.0;
             center = new Point3(0, 0, 0);
+
+            this.world = new RenderableList();
+            this.world.Add(new Sphere(new Point3(0, 0, -1), 0.5));
+            this.world.Add(new Sphere(new Point3(0, -100.5, -1), 100));
         }
 
         public int ImageWidth
@@ -76,7 +84,7 @@ namespace Rendering_Engine
 
                     Ray ray = new Ray(this.center, rayDirection);
 
-                    Color3 color = CalculateRayColor(ray);
+                    Color3 color = CalculateRayColor(ray, world);
 
                     int[] pixel = color.ToRGB();
                     pixels[i * this.imageWidth + j] = pixel;
@@ -107,14 +115,14 @@ namespace Rendering_Engine
             }
         }
 
-        private Color3 CalculateRayColor(Ray ray)
+        private Color3 CalculateRayColor(Ray ray, IRenderable world)
         {
-            double t = HitSphere(new Point3(0, 0, -1), 0.5, ray);
-            if (t > 0.0)
+            HitRecord record = new HitRecord();
+            if (world.IsHit(ray, 0, double.PositiveInfinity, record))
             {
-                Vector3 n = Vector3.UnitVector(ray.PointAtTime(t) - new Vector3(0, 0, -1));
-                return 0.5 * new Color3(n.X + 1, n.Y + 1, n.Z + 1);
+                return 0.5 * (record.Normal + new Color3(1, 1, 1));
             }
+
 
             Vector3 unitDirection = Vector3.UnitVector(ray.Direction);
             double a = 0.5 * (unitDirection.Y + 1.0);

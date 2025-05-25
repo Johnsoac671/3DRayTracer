@@ -11,12 +11,18 @@ namespace Rendering_Engine.Utilities
         private Point3 location;
         private Vector3 normal;
         private double time;
+        private bool frontFace; 
 
         public HitRecord(Point3 location, Vector3 normal, double time)
         {
             this.location = location;
             this.normal = normal;
             this.time = time;
+        }
+
+        public HitRecord()
+        {
+
         }
 
         public Point3 Location
@@ -53,6 +59,12 @@ namespace Rendering_Engine.Utilities
             {
                 this.time = value;
             }
+        }
+
+        public void SetFaceNormal(Ray r, Vector3 outwardNormal)
+        {
+            this.frontFace = Vector3.Dot(r.Direction, outwardNormal) < 0;
+            this.normal = frontFace ? outwardNormal : -outwardNormal;
         }
     }
 }

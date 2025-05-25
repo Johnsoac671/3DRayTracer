@@ -47,7 +47,9 @@ namespace Rendering_Engine.Primitives
 
             record.Time = root;
             record.Location = r.PointAtTime(root);
-            record.Normal = (record.Location - center) / radius;
+
+            Vector3 outwardNormal = (record.Location - center) / radius;
+            record.SetFaceNormal(r, outwardNormal);
 
             return true;
             
