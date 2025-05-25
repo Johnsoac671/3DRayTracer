@@ -1,12 +1,12 @@
-﻿global using Point3 = Rendering_Engine.Vector3;
-global using Color3 = Rendering_Engine.Vector3;
+﻿global using Point3 = Rendering_Engine.Utilities.Vector3;
+global using Color3 = Rendering_Engine.Utilities.Vector3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rendering_Engine
+namespace Rendering_Engine.Utilities
 {
     
     public class Vector3

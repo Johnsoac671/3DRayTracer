@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Rendering_Engine
+namespace Rendering_Engine.Utilities
 {
     public class Ray
     {
