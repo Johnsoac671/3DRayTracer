@@ -21,15 +21,15 @@ namespace Rendering_Engine
             Objects.Add(obj);
         }
 
-        public bool IsHit(Ray r, double tmin, double tmax, ref HitRecord record)
+        public bool IsHit(Ray r, Interval rayT, ref HitRecord record)
         {
             HitRecord temp = new HitRecord();
             bool hit = false;
-            double closest = tmax;
+            double closest = rayT.Max;
 
             foreach (IRenderable obj in Objects)
             {
-                if (obj.IsHit(r, tmin, closest, ref temp))
+                if (obj.IsHit(r, new Interval(rayT.Min, closest), ref temp))
                 {
                     hit = true;
                     closest = temp.Time;

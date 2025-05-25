@@ -8,6 +8,6 @@ namespace Rendering_Engine.Utilities
 {
     internal interface IRenderable
     {
-        public bool IsHit(Ray r, double tmin, double tmax, ref HitRecord record);
+        public bool IsHit(Ray r, Interval rayT, ref HitRecord record);
     }
 }
