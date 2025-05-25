@@ -9,38 +9,53 @@ namespace Rendering_Engine
 {
     public class Renderer
     {
-        private int width;
-        private int height;
+        private int imageWidth;
+        private int imageHeight;
+
+        private double viewportWidth;
+        private double viewportHeight;
+
+        private double aspect_ratio;
+
         private OutputManager outputManager;
 
-        public Renderer(int width, int height)
+
+
+        public Renderer(double aspect_ratio, int width)
         {
-            this.width = width;
-            this.height = height;
+            this.imageWidth = width;
+            this.aspect_ratio = aspect_ratio;
+
+            this.imageHeight = Math.Max((int)(width / aspect_ratio), 1);
+
+            this.viewportHeight = 2.0;
+            this.viewportWidth = viewportHeight * ((double)imageWidth / imageWidth);
 
             this.outputManager = new OutputManager();
         }
 
+
         public void Render()
         {
             Console.WriteLine("Rendering image...");
-            int[][] pixels = new int[width * height][];
+            int[][] pixels = new int[imageWidth * imageHeight][];
 
-            for (int j = 0; j < this.width; j++)
+            for (int j = 0; j < this.imageWidth; j++)
             {
                 Console.WriteLine($"Rendering Line: {j+1}");
-                for (int i = 0; i < this.height; i++)
+                for (int i = 0; i < this.imageHeight; i++)
                 {
 
-                    Color3 color = new Color3((double)i / (this.width - 1), (double)j / (this.height - 1), 0);
+                    Color3 color = new Color3((double)i / (this.imageWidth - 1), (double)j / (this.imageHeight - 1), 0);
 
                     int[] pixel = color.ToRGB();
-                    pixels[i * this.width + j] = pixel;
+                    pixels[i * this.imageWidth + j] = pixel;
                 }
 
             }
 
-            this.outputManager.WriteOutput(this.height, this.width, pixels);
+            this.outputManager.WriteOutput(this.imageHeight, this.imageWidth, pixels);
         }
+
     }
 }
