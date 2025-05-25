@@ -87,8 +87,24 @@ namespace Rendering_Engine
 
         }
 
+        private bool HitSphere(Point3 sphereCenter, double radius, Ray r)
+        {
+            Vector3 oc = sphereCenter - r.Origin;
+            var a = Vector3.Dot(r.Direction, r.Direction);
+            var b = -2.0 * Vector3.Dot(r.Direction, oc);
+            var c = Vector3.Dot(oc, oc) - radius * radius;
+
+            var discriminant = b * b - 4 * a * c;
+            return discriminant >= 0;
+        }
+
         private Color3 CalculateRayColor(Ray ray)
         {
+            if (HitSphere(new Point3(0, 0, -1), 0.5, ray))
+            {
+                return new Color3(1, 0, 0);
+            }
+
             Vector3 unitDirection = Vector3.UnitVector(ray.Direction);
             double a = 0.5 * (unitDirection.Y + 1.0);
 
