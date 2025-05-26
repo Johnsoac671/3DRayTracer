@@ -114,12 +114,10 @@ namespace Rendering_Engine
             HitRecord record = new HitRecord();
             if (world.IsHit(ray, new Interval(0, double.PositiveInfinity), ref record))
             {
-                //Lambertian Sphere Diffuse
-                Vector3 direction = record.Normal + Vector3.RandomUnitVector();
+                Color3 attenuation = new Color3(0, 0, 0);
+                Ray scatteredRay = record.Material.Scatter(ray, record, ref attenuation);
 
-                //Simple Diffuse
-                //Vector3 direction = Vector3.RandomVectorOnHemisphere(record.Normal);
-                return 0.5 * CalculateRayColor(new Ray(record.Location, direction), depth+1, world);
+                return attenuation * CalculateRayColor(scatteredRay, depth+1, world);
             }
 
 

@@ -149,6 +149,17 @@ namespace Rendering_Engine.Utilities
             }
         }
 
+        public static Vector3 Reflect(Vector3 v,  Vector3 normal)
+        {
+            return v - 2 * Dot(v, normal) * normal;
+        }
+
+        public static bool IsNearZero(Vector3 v)
+        {
+            var nearPoint = 1e-8;
+            return Math.Abs(v.X) < nearPoint && Math.Abs(v.Y) < nearPoint && Math.Abs(v.Z) < nearPoint;
+        }
+
         public static Vector3 operator -(Vector3 v)
         {
             return new Vector3(-v.X, -v.Y, -v.Z);

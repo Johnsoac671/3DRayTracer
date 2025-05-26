@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rendering_Engine.Materials;
 
 namespace Rendering_Engine.Utilities
 {
@@ -11,13 +12,15 @@ namespace Rendering_Engine.Utilities
         private Point3 location;
         private Vector3 normal;
         private double time;
+        private Material material;
         private bool frontFace; 
 
-        public HitRecord(Point3 location, Vector3 normal, double time)
+        public HitRecord(Point3 location, Vector3 normal, double time, Material material)
         {
             this.location = location;
             this.normal = normal;
             this.time = time;
+            this.material = material;
         }
 
         public HitRecord()
@@ -58,6 +61,19 @@ namespace Rendering_Engine.Utilities
             set
             {
                 this.time = value;
+            }
+        }
+
+        public Material Material
+        {
+            get
+            {
+                return this.material;
+            }
+
+            set
+            {
+                this.material = value;
             }
         }
 

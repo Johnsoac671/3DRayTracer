@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rendering_Engine.Materials;
 using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine.Primitives
@@ -11,11 +12,13 @@ namespace Rendering_Engine.Primitives
     {
         private Point3 center;
         private double radius;
+        private Material material;
 
-        public Sphere(Point3 center, double radius)
+        public Sphere(Point3 center, double radius, Material material)
         {
             this.center = center;
             this.radius = radius;
+            this.material = material;
         }
 
         public bool IsHit(Ray r, Interval rayT, ref HitRecord record)
@@ -47,6 +50,7 @@ namespace Rendering_Engine.Primitives
 
             record.Time = root;
             record.Location = r.PointAtTime(root);
+            record.Material = this.material;
 
             Vector3 outwardNormal = (record.Location - center) / radius;
             record.SetFaceNormal(r, outwardNormal);
