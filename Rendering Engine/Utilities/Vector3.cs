@@ -13,10 +13,22 @@ namespace Rendering_Engine.Utilities
     {
 
         private double[] values;
+        private static Random Random = new Random();
 
         public Vector3(double x, double y, double z)
         {
             this.values = [x, y, z];
+        }
+
+        public Vector3()
+        {
+            this.values = [Random.NextDouble(), Random.NextDouble(), Random.NextDouble()];
+        }
+
+        public Vector3(double min, double max)
+        {
+            double range = max - min;
+            this.values = [Random.NextDouble() * range + min, Random.NextDouble() * range + min, Random.NextDouble() * range + min];
         }
 
 
