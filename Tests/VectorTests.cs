@@ -1,3 +1,4 @@
+using Rendering_Engine.Utilities;
 using Rendering_Engine;
 namespace Tests
 {
@@ -169,6 +170,54 @@ namespace Tests
                 Assert.That(w.Y, Is.EqualTo(8.0));
                 Assert.That(w.Z, Is.EqualTo(5.0));
             });
+        }
+
+        [Test]
+        public void IntervalContains()
+        {
+            Interval v = new Interval(0, 1);
+
+            Assert.That(v.Contains(0.5), Is.True);
+        }
+
+        [Test]
+        public void IntervalContainsEdgeUpper()
+        {
+            Interval v = new Interval(0, 1);
+
+            Assert.That(v.Contains(1), Is.True);
+        }
+
+        [Test]
+        public void IntervalContainsEdgeLower()
+        {
+            Interval v = new Interval(0, 1);
+
+            Assert.That(v.Contains(0), Is.True);
+        }
+
+        [Test]
+        public void IntervalSurrounds()
+        {
+            Interval v = new Interval(0, 1);
+
+            Assert.That(v.Surrounds(0.5), Is.True);
+        }
+
+        [Test]
+        public void IntervalSurroundsEdgeUpper()
+        {
+            Interval v = new Interval(0, 1);
+
+            Assert.That(v.Surrounds(1), Is.False);
+        }
+
+        [Test]
+        public void IntervalSurroundsEdgeLower()
+        {
+            Interval v = new Interval(0, 1);
+
+            Assert.That(v.Surrounds(0), Is.False);
         }
     }
 }
