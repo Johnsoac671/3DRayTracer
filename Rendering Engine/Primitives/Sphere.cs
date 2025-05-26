@@ -36,10 +36,10 @@ namespace Rendering_Engine.Primitives
 
             var root = (h - sqrtD)/a;
 
-            if (root <= rayT.Min || rayT.Max <= root)
+            if (!rayT.Surrounds(root))
             {
                 root = (h + sqrtD) / a;
-                if (root <= rayT.Min || rayT.Max <= root)
+                if (!rayT.Surrounds(root))
                 {
                     return false;
                 }

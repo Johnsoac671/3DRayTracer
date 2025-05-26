@@ -40,5 +40,20 @@ namespace Rendering_Engine.Utilities
         {
             return Min < value && Max < value;
         }
+
+        public double Clamp(double value)
+        {
+            if (value < Min)
+            {
+                return Min;
+            }
+
+            if (value > Max)
+            {
+                return Max;
+            }
+
+            return value;
+        }
     }
 }

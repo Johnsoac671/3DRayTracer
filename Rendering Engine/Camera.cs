@@ -21,10 +21,17 @@ namespace Rendering_Engine
         private double focalLength;
 
         Point3 center;
+        Point3 pixel00Location;
 
-        private RenderableList world;
+        Vector3 pixelDeltaU;
+        Vector3 pixelDeltaV;
 
-        public Camera(double aspectRatio, int width)
+        private int samplesPerPixel;
+        private double sampleScale;
+
+        private Random random;
+
+        public Camera(double aspectRatio, int width, int samplesPerPixel)
         {
             this.imageWidth = width;
             this.aspectRatio = aspectRatio;
@@ -36,6 +43,20 @@ namespace Rendering_Engine
 
             this.focalLength = 1.0;
             center = new Point3(0, 0, 0);
+
+            this.samplesPerPixel = samplesPerPixel;
+            this.sampleScale = 1.0 / samplesPerPixel;
+
+            this.random = new Random();
+
+            Vector3 viewportU = new Vector3(this.viewportWidth, 0, 0);
+            Vector3 viewportV = new Vector3(0, -this.viewportHeight, 0);
+
+            this.pixelDeltaU = viewportU / this.imageWidth;
+            this.pixelDeltaV = viewportV / this.imageHeight;
+
+            Point3 viewportStart = this.center - new Vector3(0, 0, focalLength) - viewportU / 2 - viewportV / 2;
+            this.pixel00Location = viewportStart + 0.5 * (pixelDeltaU + pixelDeltaV);
 
         }
 
@@ -57,59 +78,30 @@ namespace Rendering_Engine
 
         public int[][] Render(RenderableList world)
         {
-
-            Vector3 viewportU = new Vector3(this.viewportWidth, 0, 0);
-            Vector3 viewportV = new Vector3(0, -this.viewportHeight, 0);
-
-            Vector3 pixelDeltaU = viewportU / this.imageWidth;
-            Vector3 pixelDeltaV = viewportV / this.imageHeight;
-
-            Point3 viewportStart = this.center - new Vector3(0, 0, focalLength) - viewportU / 2 - viewportV / 2;
-            Point3 pixel00Location = viewportStart + 0.5 * (pixelDeltaU + pixelDeltaV);
-
             Console.WriteLine("Rendering image...");
             int[][] pixels = new int[imageWidth * imageHeight][];
 
-            for (int j = 0; j < this.imageWidth; j++)
+            for (int j = 0; j < this.imageHeight; j++)
             {
-                Console.WriteLine($"Rendering Line: {j + 1}");
-                for (int i = 0; i < this.imageHeight; i++)
+                Console.WriteLine($"Scanlines remaining: {this.imageHeight - j}");
+                for (int i = 0; i < this.imageWidth; i++)
                 {
+                    Color3 pixelColor = new Color3(0, 0, 0);
 
-                    Point3 pixelCenter = pixel00Location + j * pixelDeltaU + i * pixelDeltaV;
-                    Vector3 rayDirection = pixelCenter - this.center;
+                    for (int sample = 0; sample < samplesPerPixel; sample++)
+                    {
+                        Ray ray = GetRandomRay(i, j);
+                        pixelColor += CalculateRayColor(ray, world);
+                    }
 
-                    Ray ray = new Ray(this.center, rayDirection);
+                    pixelColor = sampleScale * pixelColor;
+                    int[] pixel = pixelColor.ToRGB();
 
-                    Color3 color = CalculateRayColor(ray, world);
-
-                    int[] pixel = color.ToRGB();
-                    pixels[i * this.imageWidth + j] = pixel;
+                    pixels[j * this.imageWidth + i] = pixel;
                 }
-
             }
 
             return pixels;
-
-        }
-
-        private double HitSphere(Point3 sphereCenter, double radius, Ray r)
-        {
-            Vector3 oc = sphereCenter - r.Origin;
-            var a = r.Direction.SquaredLength;
-            var h = Vector3.Dot(r.Direction, oc);
-            var c = oc.SquaredLength - radius*radius;
-
-            var discriminant = h*h - a*c;
-            
-            if (discriminant < 0)
-            {
-                return -1.0;
-            }
-            else
-            {
-                return (h - Math.Sqrt(discriminant)) / a;
-            }
         }
 
         private Color3 CalculateRayColor(Ray ray, IRenderable world)
@@ -125,6 +117,22 @@ namespace Rendering_Engine
             double a = 0.5 * (unitDirection.Y + 1.0);
 
             return (1.0 - a) * new Color3(1.0, 1.0, 1.0) + a * new Color3(0.5, 0.7, 1.0);
+        }
+
+        private Ray GetRandomRay(int i, int j)
+        {
+            Vector3 offset = GetSampleVector();
+            Point3 sampleLocation = this.pixel00Location
+                + ((i + offset.X) * this.pixelDeltaU)
+                + ((j + offset.Y) * this.pixelDeltaV);
+
+            return new Ray(this.center, sampleLocation - center);
+
+        }
+
+        private Vector3 GetSampleVector()
+        {
+            return new Vector3(this.random.NextDouble() - 0.5, this.random.NextDouble() - 0.5, 0);
         }
     }
 }

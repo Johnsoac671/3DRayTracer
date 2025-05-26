@@ -15,12 +15,12 @@ namespace Rendering_Engine
         private OutputManager outputManager;
         private Camera camera;
         private RenderableList world;
+        private int samplesPerPixel;
 
-
-        public Renderer(double aspectRatio, int width)
+        public Renderer(double aspectRatio, int width, int samplesPerPixel)
         {
             this.outputManager = new OutputManager();
-            this.camera = new Camera(aspectRatio, width);
+            this.camera = new Camera(aspectRatio, width, samplesPerPixel);
 
 
             this.world = new RenderableList();
