@@ -11,44 +11,45 @@ namespace Rendering_Engine
 {
     public class Camera
     {
+        // Image Properties
         private int imageWidth;
         private int imageHeight;
 
+        // Viewport Properties
         private double viewportWidth;
         private double viewportHeight;
-
         private double aspectRatio;
         private double focalLength;
 
+        // Camera Properties
         Point3 center;
         Point3 pixel00Location;
-
         Vector3 pixelDeltaU;
         Vector3 pixelDeltaV;
 
+        // Sampling Properties
         private int samplesPerPixel;
         private double sampleScale;
-
+        private int maxDepth;
         private Random random;
 
         public Camera(double aspectRatio, int width, int samplesPerPixel)
         {
-            this.imageWidth = width;
             this.aspectRatio = aspectRatio;
-
+            this.imageWidth = width;
             this.imageHeight = Math.Max((int)(width / aspectRatio), 1);
+            this.samplesPerPixel = samplesPerPixel;
+            this.sampleScale = 1.0 / samplesPerPixel;
+            this.maxDepth = 10;
+            this.random = new Random();
 
+            // Initialize Viewport
             this.viewportHeight = 2.0;
             this.viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
-
             this.focalLength = 1.0;
             center = new Point3(0, 0, 0);
 
-            this.samplesPerPixel = samplesPerPixel;
-            this.sampleScale = 1.0 / samplesPerPixel;
-
-            this.random = new Random();
-
+            // Calculating pixel positioning
             Vector3 viewportU = new Vector3(this.viewportWidth, 0, 0);
             Vector3 viewportV = new Vector3(0, -this.viewportHeight, 0);
 
@@ -91,7 +92,7 @@ namespace Rendering_Engine
                     for (int sample = 0; sample < samplesPerPixel; sample++)
                     {
                         Ray ray = GetRandomRay(i, j);
-                        pixelColor += CalculateRayColor(ray, world);
+                        pixelColor += CalculateRayColor(ray, 0, world);
                     }
 
                     pixelColor = sampleScale * pixelColor;
@@ -104,13 +105,18 @@ namespace Rendering_Engine
             return pixels;
         }
 
-        private Color3 CalculateRayColor(Ray ray, IRenderable world)
+        private Color3 CalculateRayColor(Ray ray, int depth, IRenderable world)
         {
+            if (depth >= this.maxDepth)
+            {
+                return new Color3(0, 0, 0);
+            }
+
             HitRecord record = new HitRecord();
             if (world.IsHit(ray, new Interval(0, double.PositiveInfinity), ref record))
             {
                 Vector3 direction = Vector3.RandomVectorOnHemisphere(record.Normal);
-                return 0.5 * CalculateRayColor(new Ray(record.Location, direction), world);
+                return 0.5 * CalculateRayColor(new Ray(record.Location, direction), depth+1, world);
             }
 
 
