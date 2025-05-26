@@ -33,12 +33,12 @@ namespace Rendering_Engine.Utilities
 
         public bool Contains(double value)
         {
-            return Min <= value && Max <= value;
+            return Min <= value && value <= Max;
         }
 
         public bool Surrounds(double value)
         {
-            return Min < value && Max < value;
+            return Min < value && value < Max;
         }
 
         public double Clamp(double value)
