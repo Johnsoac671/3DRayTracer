@@ -116,6 +116,34 @@ namespace Rendering_Engine.Utilities
             return v / v.Length;
         }
 
+        public static Vector3 RandomUnitVector()
+        {
+            while (true)
+            {
+                Vector3 candidate = new Vector3(-1, 1);
+                double squaredLength = candidate.SquaredLength;
+
+                if (squaredLength <= 1 && 1e-160 < squaredLength)
+                {
+                    return candidate/Math.Sqrt(squaredLength);
+                }
+            }
+        }
+
+        public static Vector3 RandomVectorOnHemisphere(Vector3 normal)
+        {
+            Vector3 randomUnit = RandomUnitVector();
+            
+            if (Dot(normal, randomUnit) > 0)
+            {
+                return randomUnit;
+            }
+            else
+            {
+                return -randomUnit;
+            }
+        }
+
         public static Vector3 operator -(Vector3 v)
         {
             return new Vector3(-v.X, -v.Y, -v.Z);
