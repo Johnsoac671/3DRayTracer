@@ -111,11 +111,14 @@ namespace Rendering_Engine
             {
                 return new Color3(0, 0, 0);
             }
-
             HitRecord record = new HitRecord();
-            if (world.IsHit(ray, new Interval(0.001, double.PositiveInfinity), ref record))
+            if (world.IsHit(ray, new Interval(0, double.PositiveInfinity), ref record))
             {
-                Vector3 direction = Vector3.RandomVectorOnHemisphere(record.Normal);
+                //Lambertian Sphere Diffuse
+                Vector3 direction = record.Normal + Vector3.RandomUnitVector();
+
+                //Simple Diffuse
+                //Vector3 direction = Vector3.RandomVectorOnHemisphere(record.Normal);
                 return 0.5 * CalculateRayColor(new Ray(record.Location, direction), depth+1, world);
             }
 

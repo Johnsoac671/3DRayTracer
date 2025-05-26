@@ -90,9 +90,14 @@ namespace Rendering_Engine.Utilities
 
         public int[] ToRGB()
         {
-            int ir = Math.Clamp((int)(this.X * 255.999), 0, 255);
-            int ig = Math.Clamp((int)(this.Y * 255.999), 0, 255);
-            int ib = Math.Clamp((int)(this.Z * 255.999), 0, 255);
+            // Convert to Gamma space
+            double r = this.X > 0 ? Math.Sqrt(this.X) : 0;
+            double g = this.Y > 0 ? Math.Sqrt(this.Y) : 0;
+            double b = this.Z > 0 ? Math.Sqrt(this.Z) : 0;
+
+            int ir = Math.Clamp((int)(r * 255.999), 0, 255);
+            int ig = Math.Clamp((int)(g * 255.999), 0, 255);
+            int ib = Math.Clamp((int)(b * 255.999), 0, 255);
 
             return new int[] { ir, ig, ib };
         }
