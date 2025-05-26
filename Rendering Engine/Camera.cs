@@ -109,7 +109,8 @@ namespace Rendering_Engine
             HitRecord record = new HitRecord();
             if (world.IsHit(ray, new Interval(0, double.PositiveInfinity), ref record))
             {
-                return 0.5 * (record.Normal + new Color3(1, 1, 1));
+                Vector3 direction = Vector3.RandomVectorOnHemisphere(record.Normal);
+                return 0.5 * CalculateRayColor(new Ray(record.Location, direction), world);
             }
 
 
