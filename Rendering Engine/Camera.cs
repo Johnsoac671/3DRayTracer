@@ -34,6 +34,12 @@ namespace Rendering_Engine
 
         private Vector3 u, v, w;
 
+        private Vector3 defocusDiskU;
+        private Vector3 defocusDiskV;
+
+        private double defocusAngle;
+        private double focusDistance;
+
         // Sampling Properties
         private int samplesPerPixel;
         private double sampleScale;
@@ -47,10 +53,12 @@ namespace Rendering_Engine
             this.imageHeight = Math.Max((int)(width / aspectRatio), 1);
             this.samplesPerPixel = samplesPerPixel;
             this.sampleScale = 1.0 / samplesPerPixel;
-            this.maxDepth = 10;
+            this.maxDepth = 50;
             this.random = new Random();
 
-            this.fov = 90;
+            this.fov = 20;
+            this.defocusAngle = 10;
+            this.focusDistance = 3.4;
 
 
             this.lookFrom = new Point3(-2, 2, 1);
@@ -60,11 +68,10 @@ namespace Rendering_Engine
             this.center = this.lookFrom;
 
             // Initialize Viewport
-            this.focalLength = (lookFrom - lookTo).Length;
             double theta = (Math.PI / 180) * fov;
             double h = Math.Tan(theta / 2);
 
-            this.viewportHeight = 2 * h * this.focalLength;
+            this.viewportHeight = 2 * h * this.focusDistance;
             this.viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
 
             this.w = Vector3.UnitVector(this.lookFrom -  this.lookTo);
@@ -78,8 +85,12 @@ namespace Rendering_Engine
             this.pixelDeltaU = viewportU / this.imageWidth;
             this.pixelDeltaV = viewportV / this.imageHeight;
 
-            Point3 viewportStart = this.center - (focalLength * w) - viewportU / 2 - viewportV / 2;
+            Point3 viewportStart = this.center - (focusDistance * w) - viewportU / 2 - viewportV / 2;
             this.pixel00Location = viewportStart + 0.5 * (pixelDeltaU + pixelDeltaV);
+
+            double defocusRadius = focusDistance * Math.Tan((Math.PI / 180) * (defocusAngle / 2));
+            this.defocusDiskU = u * defocusRadius;
+            this.defocusDiskV = v * defocusRadius;
 
         }
 
@@ -156,8 +167,16 @@ namespace Rendering_Engine
                 + ((i + offset.X) * this.pixelDeltaU)
                 + ((j + offset.Y) * this.pixelDeltaV);
 
-            return new Ray(this.center, sampleLocation - center);
+            Point3 rayOrigin = (defocusAngle <= 0) ? center : defocusDiskSample();
+            return new Ray(rayOrigin, sampleLocation - center);
 
+        }
+
+        private Point3 defocusDiskSample()
+        {
+            Vector3 p = Vector3.RandomUnitOnDisk();
+
+            return this.center + (p.X * defocusDiskU) + (p.Y * defocusDiskV);
         }
 
         private Vector3 GetSampleVector()

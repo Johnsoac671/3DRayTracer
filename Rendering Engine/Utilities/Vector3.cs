@@ -135,6 +135,18 @@ namespace Rendering_Engine.Utilities
             }
         }
 
+        public static Vector3 RandomUnitOnDisk()
+        {
+            while (true)
+            {
+                Vector3 candidate = new Vector3(Random.NextDouble() * 2 - 1, Random.NextDouble() * 2 - 1, 0);
+                if (candidate.SquaredLength < 1)
+                {
+                    return candidate;
+                }
+            }
+        }
+
         public static Vector3 RandomVectorOnHemisphere(Vector3 normal)
         {
             Vector3 randomUnit = RandomUnitVector();
