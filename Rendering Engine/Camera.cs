@@ -22,10 +22,11 @@ namespace Rendering_Engine
         private double focalLength;
 
         // Camera Properties
-        Point3 center;
-        Point3 pixel00Location;
-        Vector3 pixelDeltaU;
-        Vector3 pixelDeltaV;
+        private Point3 center;
+        private Point3 pixel00Location;
+        private Vector3 pixelDeltaU;
+        private Vector3 pixelDeltaV;
+        private double fov;
 
         // Sampling Properties
         private int samplesPerPixel;
@@ -43,10 +44,16 @@ namespace Rendering_Engine
             this.maxDepth = 10;
             this.random = new Random();
 
+            this.fov = 90;
+
             // Initialize Viewport
-            this.viewportHeight = 2.0;
-            this.viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
             this.focalLength = 1.0;
+            double theta = (Math.PI / 180) * fov;
+            double h = Math.Tan(theta / 2);
+
+            this.viewportHeight = 2 * h * this.focalLength;
+            this.viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
+            
             center = new Point3(0, 0, 0);
 
             // Calculating pixel positioning
