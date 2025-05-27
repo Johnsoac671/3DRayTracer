@@ -28,6 +28,12 @@ namespace Rendering_Engine
         private Vector3 pixelDeltaV;
         private double fov;
 
+        private Point3 lookFrom;
+        private Point3 lookTo;
+        private Vector3 lookUp;
+
+        private Vector3 u, v, w;
+
         // Sampling Properties
         private int samplesPerPixel;
         private double sampleScale;
@@ -46,24 +52,33 @@ namespace Rendering_Engine
 
             this.fov = 90;
 
+
+            this.lookFrom = new Point3(-2, 2, 1);
+            this.lookTo = new Point3(0, 0, -1);
+            this.lookUp = new Vector3(0, 1, 0);
+
+            this.center = this.lookFrom;
+
             // Initialize Viewport
-            this.focalLength = 1.0;
+            this.focalLength = (lookFrom - lookTo).Length;
             double theta = (Math.PI / 180) * fov;
             double h = Math.Tan(theta / 2);
 
             this.viewportHeight = 2 * h * this.focalLength;
             this.viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
-            
-            center = new Point3(0, 0, 0);
+
+            this.w = Vector3.UnitVector(this.lookFrom -  this.lookTo);
+            this.u = Vector3.UnitVector(Vector3.Cross(this.lookUp, w));
+            this.v = Vector3.Cross(w, u);
 
             // Calculating pixel positioning
-            Vector3 viewportU = new Vector3(this.viewportWidth, 0, 0);
-            Vector3 viewportV = new Vector3(0, -this.viewportHeight, 0);
+            Vector3 viewportU = viewportWidth * u;
+            Vector3 viewportV = viewportHeight * -v;
 
             this.pixelDeltaU = viewportU / this.imageWidth;
             this.pixelDeltaV = viewportV / this.imageHeight;
 
-            Point3 viewportStart = this.center - new Vector3(0, 0, focalLength) - viewportU / 2 - viewportV / 2;
+            Point3 viewportStart = this.center - (focalLength * w) - viewportU / 2 - viewportV / 2;
             this.pixel00Location = viewportStart + 0.5 * (pixelDeltaU + pixelDeltaV);
 
         }
