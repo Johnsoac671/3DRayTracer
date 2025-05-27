@@ -154,6 +154,16 @@ namespace Rendering_Engine.Utilities
             return v - 2 * Dot(v, normal) * normal;
         }
 
+        public static Vector3 Refract(Vector3 uv, Vector3 normal, double eta)
+        {
+            double cosTheta = Math.Min(Dot(-uv, normal), 1.0);
+            Vector3 rPerpendicular = eta * (uv + cosTheta * normal);
+            Vector3 rParallel = -Math.Sqrt(Math.Abs(1.0 - rPerpendicular.SquaredLength)) * normal;
+
+            return rParallel + rPerpendicular;
+
+        }
+
         public static bool IsNearZero(Vector3 v)
         {
             var nearPoint = 1e-8;
