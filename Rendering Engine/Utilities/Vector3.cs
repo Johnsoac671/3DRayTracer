@@ -88,22 +88,6 @@ namespace Rendering_Engine.Utilities
             }
         }
 
-        public int[] ToRGB()
-        {
-            // Convert to Gamma space
-            double r = this.X > 0 ? Math.Sqrt(this.X) : 0;
-            double g = this.Y > 0 ? Math.Sqrt(this.Y) : 0;
-            double b = this.Z > 0 ? Math.Sqrt(this.Z) : 0;
-
-            int ir = Math.Clamp((int)(r * 255.999), 0, 255);
-            int ig = Math.Clamp((int)(g * 255.999), 0, 255);
-            int ib = Math.Clamp((int)(b * 255.999), 0, 255);
-
-            return new int[] { ir, ig, ib };
-        }
-
-
-
         public static double Dot(Vector3 v1, Vector3 v2)
         {
             return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
