@@ -64,6 +64,14 @@ namespace Rendering_Engine.Utilities
             }
         }
 
+        public bool IsFrontFace
+        {
+            get
+            {
+                return this.frontFace;
+            }
+        }
+
         public Material Material
         {
             get

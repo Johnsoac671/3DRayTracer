@@ -7,7 +7,7 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine.Materials
 {
-    internal class Metal : Material
+    public class Metal : Material
     {
         public Color3 Albedo { get; }
         public double Roughness {  get; }

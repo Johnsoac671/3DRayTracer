@@ -7,7 +7,7 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine.Materials
 {
-    internal class Diffuse : Material
+    public class Diffuse : Material
     {
         private Color3 albedo;
         public Diffuse(Color3 albedo)
