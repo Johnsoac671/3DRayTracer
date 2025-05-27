@@ -7,10 +7,11 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine.Materials
 {
-    public class Glass : Material
+    public class Dielectric : Material
     {
         public double IOR { get; }
-        public Glass(double indexOfRefraction)
+        private static Random random = new Random();
+        public Dielectric(double indexOfRefraction)
         {
             this.IOR = indexOfRefraction;
         }
@@ -29,7 +30,7 @@ namespace Rendering_Engine.Materials
 
             Vector3 direction;
 
-            if (cannotRefract)
+            if (cannotRefract || SchlickApprox(cosTheta, ri) > random.NextDouble())
             {
                 direction = Vector3.Reflect(unit, record.Normal);
             }
@@ -39,6 +40,14 @@ namespace Rendering_Engine.Materials
             }
 
             return new Ray(record.Location, direction);
+        }
+
+        public static double SchlickApprox(double cos, double IOR)
+        {
+            double r0 = (1 - IOR) / (1 + IOR);
+            r0 = r0 * r0;
+
+            return r0 + (1-r0)*Math.Pow((1- cos), 5);
         }
     }
 }

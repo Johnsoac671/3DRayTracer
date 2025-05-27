@@ -26,7 +26,7 @@ namespace Rendering_Engine
             Material ground = new Diffuse(new Color3(0.8, 0.8, 0.8));
 
             Material middle = new Diffuse(new Color3(0.1, 0.2, 0.5));
-            Material left = new Glass(1.5);
+            Material left = new Dielectric(1.5);
             Material right = new Metal(new Color3(0.8, 0.6, 0.2), 1.0);
 
 
