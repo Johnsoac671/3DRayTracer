@@ -21,9 +21,24 @@ namespace Rendering_Engine.Materials
             double ri = record.IsFrontFace ? (1.0 / this.IOR) : this.IOR;
 
             Vector3 unit = Vector3.UnitVector(ray.Direction);
-            Vector3 refracted = Vector3.Refract(unit, record.Normal, ri);
 
-            return new Ray(record.Location, refracted);
+            double cosTheta = Math.Min(Vector3.Dot(-unit, record.Normal), 1.0);
+            double sinTheta = Math.Sqrt(1.0 - cosTheta * cosTheta);
+
+            bool cannotRefract = ri * sinTheta > 1.0;
+
+            Vector3 direction;
+
+            if (cannotRefract)
+            {
+                direction = Vector3.Reflect(unit, record.Normal);
+            }
+            else
+            {
+                direction = Vector3.Refract(unit, record.Normal, ri);
+            }
+
+            return new Ray(record.Location, direction);
         }
     }
 }
