@@ -6,22 +6,19 @@ using System.Threading.Tasks;
 using Rendering_Engine.Materials;
 using Rendering_Engine.Output;
 using Rendering_Engine.Primitives;
+using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine
 {
     public class Renderer
     {
-
-
-        private OutputManager outputManager;
-        private Camera camera;
         private RenderableList world;
-        private int samplesPerPixel;
-
-        public Renderer(double aspectRatio, int width, int samplesPerPixel)
+        private RayTracer rayTracer;
+        public Renderer()
         {
-            this.outputManager = new OutputManager();
-            this.camera = new Camera(aspectRatio, width, samplesPerPixel);
+            CameraSettings cameraSettings = new CameraSettings();
+            RenderSettings renderSettings = new RenderSettings();
+            rayTracer = new RayTracer(cameraSettings, renderSettings);
 
             Material ground = new Diffuse(new Color3(0.8, 0.8, 0.8));
 
@@ -40,9 +37,7 @@ namespace Rendering_Engine
 
         public void Render()
         {
-
-            int[][] pixels = this.camera.Render(this.world);
-            this.outputManager.WriteOutput(this.camera.ImageHeight, this.camera.ImageWidth, pixels);
+            rayTracer.Render(world);
         }
 
     }

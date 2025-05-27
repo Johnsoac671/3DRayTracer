@@ -14,7 +14,7 @@ namespace Rendering_Engine
         public Vector3 LookUp { get; init; } = new(0, 1, 0);
 
         public double FieldOfView { get; init; } = 90;
-        public double FocusAngle { get; init; } = 10.0;
+        public double FocusAngle { get; init; } = 0.0;
         public double FocusDistance { get; init; } = 3.4;
 
 

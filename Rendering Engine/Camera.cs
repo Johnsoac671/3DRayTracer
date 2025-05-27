@@ -11,7 +11,6 @@ namespace Rendering_Engine
 {
     public class Camera
     {
-
         private CameraSettings cameraSettings;
         private RenderSettings renderSettings;
         private RandomGenerator random;
@@ -32,10 +31,15 @@ namespace Rendering_Engine
             this.renderSettings = renderSettings;
             this.random = random;
 
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             this.center = cameraSettings.LookFrom;
 
             this.w = Vector3.UnitVector(cameraSettings.LookFrom - cameraSettings.LookTo);
-            this.u = Vector3.Cross(cameraSettings.LookUp, this.w);
+            this.u = Vector3.UnitVector(Vector3.Cross(cameraSettings.LookUp, this.w));
             this.v = Vector3.Cross(this.w, this.u);
 
             double theta = (Math.PI / 180) * cameraSettings.FieldOfView;
@@ -56,60 +60,9 @@ namespace Rendering_Engine
             double defocusRadius = cameraSettings.FocusDistance * Math.Tan((Math.PI / 180) * (cameraSettings.FocusAngle / 2));
             this.defocusDiskU = u * defocusRadius;
             this.defocusDiskV = v * defocusRadius;
-
         }
 
-        public int[][] Render(RenderableList world)
-        {
-            Console.WriteLine("Rendering image...");
-            int[][] pixels = new int[imageWidth * imageHeight][];
-
-            for (int j = 0; j < this.imageHeight; j++)
-            {
-                Console.WriteLine($"Scanlines remaining: {this.imageHeight - j}");
-                for (int i = 0; i < this.imageWidth; i++)
-                {
-                    Color3 pixelColor = new Color3(0, 0, 0);
-
-                    for (int sample = 0; sample < samplesPerPixel; sample++)
-                    {
-                        Ray ray = GetRandomRay(i, j);
-                        pixelColor += CalculateRayColor(ray, 0, world);
-                    }
-
-                    pixelColor = sampleScale * pixelColor;
-                    int[] pixel = pixelColor.ToRGB();
-
-                    pixels[j * this.imageWidth + i] = pixel;
-                }
-            }
-
-            return pixels;
-        }
-
-        private Color3 CalculateRayColor(Ray ray, int depth, IRenderable world)
-        {
-            if (depth >= this.maxDepth)
-            {
-                return new Color3(0, 0, 0);
-            }
-            HitRecord record = new HitRecord();
-            if (world.IsHit(ray, new Interval(0, double.PositiveInfinity), ref record))
-            {
-                Color3 attenuation = new Color3(0, 0, 0);
-                Ray scatteredRay = record.Material.Scatter(ray, record, ref attenuation);
-
-                return attenuation * CalculateRayColor(scatteredRay, depth+1, world);
-            }
-
-
-            Vector3 unitDirection = Vector3.UnitVector(ray.Direction);
-            double a = 0.5 * (unitDirection.Y + 1.0);
-
-            return (1.0 - a) * new Color3(1.0, 1.0, 1.0) + a * new Color3(0.5, 0.7, 1.0);
-        }
-
-        private Ray GetRandomRay(int i, int j)
+        public Ray GetRayForPixel(int i, int j)
         {
             Vector3 offset = GetSampleVector();
             Point3 sampleLocation = this.pixel00Location
@@ -117,14 +70,12 @@ namespace Rendering_Engine
                 + ((j + offset.Y) * this.pixelDeltaV);
 
             Point3 rayOrigin = (this.cameraSettings.FocusAngle <= 0) ? this.center : GetDefocusSample();
-            return new Ray(rayOrigin, sampleLocation - center);
-
+            return new Ray(rayOrigin, sampleLocation - rayOrigin);
         }
 
         private Point3 GetDefocusSample()
         {
             Vector3 p = Vector3.RandomUnitOnDisk();
-
             return this.center + (p.X * defocusDiskU) + (p.Y * defocusDiskV);
         }
 

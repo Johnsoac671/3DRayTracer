@@ -53,7 +53,14 @@ namespace Rendering_Engine.Utilities
 
         }
 
-        public int[] ToRGB()
+        public static Color3 Black => new(0, 0, 0);
+        public static Color3 White => new(1, 1, 1);
+        public static Color3 Red => new(1, 0, 0);
+        public static Color3 Green => new(0, 1, 0);
+        public static Color3 Blue => new(0, 0, 1);
+        public static Color3 LightBlue => new(0.5, 0.7, 1.0);
+
+        public override int[] ToRGB()
         {
             // Convert to Gamma space
             double r = this.X > 0 ? Math.Sqrt(this.X) : 0;
@@ -65,6 +72,42 @@ namespace Rendering_Engine.Utilities
             int ib = Math.Clamp((int)(b * 255.999), 0, 255);
 
             return new int[] { ir, ig, ib };
+        }
+
+        public static Color3 operator -(Color3 v)
+        {
+            return new Color3(-v.X, -v.Y, -v.Z);
+        }
+
+        public static Color3 operator +(Color3 v1, Color3 v2)
+        {
+            return new Color3(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
+        }
+
+        public static Color3 operator -(Color3 v1, Color3 v2)
+        {
+            return new Color3(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z);
+        }
+
+        public static Color3 operator *(Color3 v1, Color3 v2)
+        {
+            return new Color3(v1.X * v2.X, v1.Y * v2.Y, v1.Z * v2.Z);
+        }
+
+
+        public static Color3 operator *(double t, Color3 v)
+        {
+            return new Color3(v.X * t, v.Y * t, v.Z * t);
+        }
+
+        public static Color3 operator *(Color3 v, double t)
+        {
+            return t * v;
+        }
+
+        public static Color3 operator /(Color3 v, double t)
+        {
+            return (1 / t) * v;
         }
     }
 }

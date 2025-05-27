@@ -1,5 +1,4 @@
 ﻿global using Point3 = Rendering_Engine.Utilities.Vector3;
-global using Color3 = Rendering_Engine.Utilities.Vector3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,6 +86,22 @@ namespace Rendering_Engine.Utilities
                 return Math.Pow(this.X, 2) + Math.Pow(this.Y, 2) + Math.Pow(this.Z, 2);
             }
         }
+
+        public virtual int[] ToRGB()
+        {
+            // Convert to Gamma space
+            double r = this.X > 0 ? Math.Sqrt(this.X) : 0;
+            double g = this.Y > 0 ? Math.Sqrt(this.Y) : 0;
+            double b = this.Z > 0 ? Math.Sqrt(this.Z) : 0;
+
+            int ir = Math.Clamp((int)(r * 255.999), 0, 255);
+            int ig = Math.Clamp((int)(g * 255.999), 0, 255);
+            int ib = Math.Clamp((int)(b * 255.999), 0, 255);
+
+            return new int[] { ir, ig, ib };
+        }
+
+
 
         public static double Dot(Vector3 v1, Vector3 v2)
         {

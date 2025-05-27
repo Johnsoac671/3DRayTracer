@@ -12,7 +12,7 @@ namespace Rendering_Engine.Utilities
         private Point3 origin;
         private Vector3 direction;
 
-        public Ray(Vector3 origin, Vector3 direction)
+        public Ray(Point3 origin, Vector3 direction)
         {
             this.origin = origin;
             this.direction = direction;
@@ -36,7 +36,7 @@ namespace Rendering_Engine.Utilities
 
         public Point3 PointAtTime(double time)
         {
-            return this.origin + (this.direction * time);
+            return (Point3)(this.origin + (this.direction * time));
         }
     }
 }
