@@ -11,103 +11,52 @@ namespace Rendering_Engine
 {
     public class Camera
     {
-        // Image Properties
-        private int imageWidth;
-        private int imageHeight;
 
-        // Viewport Properties
-        private double viewportWidth;
-        private double viewportHeight;
-        private double aspectRatio;
-        private double focalLength;
+        private CameraSettings cameraSettings;
+        private RenderSettings renderSettings;
+        private RandomGenerator random;
 
-        // Camera Properties
         private Point3 center;
         private Point3 pixel00Location;
         private Vector3 pixelDeltaU;
         private Vector3 pixelDeltaV;
-        private double fov;
-
-        private Point3 lookFrom;
-        private Point3 lookTo;
-        private Vector3 lookUp;
 
         private Vector3 u, v, w;
 
         private Vector3 defocusDiskU;
         private Vector3 defocusDiskV;
 
-        private double defocusAngle;
-        private double focusDistance;
-
-        // Sampling Properties
-        private int samplesPerPixel;
-        private double sampleScale;
-        private int maxDepth;
-        private Random random;
-
-        public Camera(double aspectRatio, int width, int samplesPerPixel)
+        public Camera(CameraSettings cameraSettings, RenderSettings renderSettings, RandomGenerator random)
         {
-            this.aspectRatio = aspectRatio;
-            this.imageWidth = width;
-            this.imageHeight = Math.Max((int)(width / aspectRatio), 1);
-            this.samplesPerPixel = samplesPerPixel;
-            this.sampleScale = 1.0 / samplesPerPixel;
-            this.maxDepth = 50;
-            this.random = new Random();
+            this.cameraSettings = cameraSettings;
+            this.renderSettings = renderSettings;
+            this.random = random;
 
-            this.fov = 20;
-            this.defocusAngle = 10;
-            this.focusDistance = 3.4;
+            this.center = cameraSettings.LookFrom;
 
+            this.w = Vector3.UnitVector(cameraSettings.LookFrom - cameraSettings.LookTo);
+            this.u = Vector3.Cross(cameraSettings.LookUp, this.w);
+            this.v = Vector3.Cross(this.w, this.u);
 
-            this.lookFrom = new Point3(-2, 2, 1);
-            this.lookTo = new Point3(0, 0, -1);
-            this.lookUp = new Vector3(0, 1, 0);
-
-            this.center = this.lookFrom;
-
-            // Initialize Viewport
-            double theta = (Math.PI / 180) * fov;
+            double theta = (Math.PI / 180) * cameraSettings.FieldOfView;
             double h = Math.Tan(theta / 2);
 
-            this.viewportHeight = 2 * h * this.focusDistance;
-            this.viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
+            double viewportHeight = 2 * h * cameraSettings.FocusDistance;
+            double viewportWidth = viewportHeight * ((double)renderSettings.ImageWidth / renderSettings.ImageHeight);
 
-            this.w = Vector3.UnitVector(this.lookFrom -  this.lookTo);
-            this.u = Vector3.UnitVector(Vector3.Cross(this.lookUp, w));
-            this.v = Vector3.Cross(w, u);
-
-            // Calculating pixel positioning
             Vector3 viewportU = viewportWidth * u;
             Vector3 viewportV = viewportHeight * -v;
 
-            this.pixelDeltaU = viewportU / this.imageWidth;
-            this.pixelDeltaV = viewportV / this.imageHeight;
+            this.pixelDeltaU = viewportU / renderSettings.ImageWidth;
+            this.pixelDeltaV = viewportV / renderSettings.ImageHeight;
 
-            Point3 viewportStart = this.center - (focusDistance * w) - viewportU / 2 - viewportV / 2;
+            Point3 viewportStart = center - (cameraSettings.FocusDistance * w) - viewportU / 2 - viewportV / 2;
             this.pixel00Location = viewportStart + 0.5 * (pixelDeltaU + pixelDeltaV);
 
-            double defocusRadius = focusDistance * Math.Tan((Math.PI / 180) * (defocusAngle / 2));
+            double defocusRadius = cameraSettings.FocusDistance * Math.Tan((Math.PI / 180) * (cameraSettings.FocusAngle / 2));
             this.defocusDiskU = u * defocusRadius;
             this.defocusDiskV = v * defocusRadius;
 
-        }
-
-        public int ImageWidth
-        {
-            get
-            {
-                return this.imageWidth;
-            }
-        }
-
-        public int ImageHeight
-        {
-            get
-            {
-                return this.imageHeight;
-            }
         }
 
         public int[][] Render(RenderableList world)
@@ -167,12 +116,12 @@ namespace Rendering_Engine
                 + ((i + offset.X) * this.pixelDeltaU)
                 + ((j + offset.Y) * this.pixelDeltaV);
 
-            Point3 rayOrigin = (defocusAngle <= 0) ? center : defocusDiskSample();
+            Point3 rayOrigin = (this.cameraSettings.FocusAngle <= 0) ? this.center : GetDefocusSample();
             return new Ray(rayOrigin, sampleLocation - center);
 
         }
 
-        private Point3 defocusDiskSample()
+        private Point3 GetDefocusSample()
         {
             Vector3 p = Vector3.RandomUnitOnDisk();
 
