@@ -8,7 +8,7 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine.Primitives
 {
-    internal class Sphere : IRenderable
+    public class Sphere : IRenderable
     {
         private Point3 center;
         private double radius;

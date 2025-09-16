@@ -12,49 +12,14 @@ namespace Rendering_Engine
 {
     public class RayTracer
     {
-        private OutputManager outputManager;
-        private Camera camera;
         private RenderSettings renderSettings;
-        private RandomGenerator random;
 
-        public RayTracer(CameraSettings cameraSettings, RenderSettings renderSettings)
+        public RayTracer(RenderSettings renderSettings)
         {
-            this.outputManager = new OutputManager();
-            this.random = new RandomGenerator();
             this.renderSettings = renderSettings;
-            this.camera = new Camera(cameraSettings, renderSettings, random);
         }
 
-        public void Render(RenderableList world)
-        {
-            Console.WriteLine("Starting ray tracing render...");
-            int[][] pixels = new int[renderSettings.ImageWidth * renderSettings.ImageHeight][];
-
-            for (int j = 0; j < renderSettings.ImageHeight; j++)
-            {
-                Console.WriteLine($"Scanlines remaining: {renderSettings.ImageHeight - j}");
-                for (int i = 0; i < renderSettings.ImageWidth; i++)
-                {
-                    Color3 pixelColor = Color3.Black;
-
-                    for (int sample = 0; sample < renderSettings.SamplesPerPixel; sample++)
-                    {
-                        Ray ray = camera.GetRayForPixel(i, j);
-                        pixelColor += CalculateRayColor(ray, 0, world);
-                    }
-
-                    pixelColor = renderSettings.SampleScale * pixelColor;
-                    int[] pixel = pixelColor.ToRGB();
-
-                    pixels[j * renderSettings.ImageWidth + i] = pixel;
-                }
-            }
-
-            this.outputManager.WriteOutput(renderSettings.ImageHeight, renderSettings.ImageWidth, pixels);
-            Console.WriteLine("Ray tracing complete!");
-        }
-
-        private Color3 CalculateRayColor(Ray ray, int depth, IRenderable world)
+        public Color3 CalculateRayColor(Ray ray, int depth, IRenderable world)
         {
             if (depth >= renderSettings.MaxDepth)
             {

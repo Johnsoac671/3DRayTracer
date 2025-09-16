@@ -9,13 +9,13 @@ namespace Rendering_Engine
 {
     public class CameraSettings
     {
-        public Point3 LookFrom { get; init; } = new(-2, 2, 1);
-        public Point3 LookTo { get; init; } = new(0, 0, -1);
+        public Point3 LookFrom { get; init; } = new(13, 2, 3);
+        public Point3 LookTo { get; init; } = new(0, 0, 0);
         public Vector3 LookUp { get; init; } = new(0, 1, 0);
 
-        public double FieldOfView { get; init; } = 90;
-        public double FocusAngle { get; init; } = 0.0;
-        public double FocusDistance { get; init; } = 3.4;
+        public double FieldOfView { get; init; } = 20;
+        public double FocusAngle { get; init; } = 0.6;
+        public double FocusDistance { get; init; } = 10.4;
 
 
     }

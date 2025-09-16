@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,32 +13,48 @@ namespace Rendering_Engine
 {
     public class Renderer
     {
-        private RenderableList world;
+        private Scene scene;
+        private RenderSettings renderSettings;
         private RayTracer rayTracer;
-        public Renderer()
+        private OutputManager outputManager;
+
+        public Renderer(Scene scene, RenderSettings renderSettings)
         {
-            CameraSettings cameraSettings = new CameraSettings();
-            RenderSettings renderSettings = new RenderSettings();
-            rayTracer = new RayTracer(cameraSettings, renderSettings);
-
-            Material ground = new Diffuse(new Color3(0.8, 0.8, 0.8));
-
-            Material middle = new Diffuse(new Color3(0.1, 0.2, 0.5));
-            Material left = new Dielectric(1.5);
-            Material right = new Metal(new Color3(0.8, 0.6, 0.2), 1.0);
-
-
-            this.world = new RenderableList();
-            this.world.Add(new Sphere(new Point3(0, 0, -1), 0.5, middle));
-            this.world.Add(new Sphere(new Point3(-1.0, 0, -1), 0.5, left));
-            this.world.Add(new Sphere(new Point3(1.0, 0, -1), 0.5, right));
-            this.world.Add(new Sphere(new Point3(0, -100.5, -1), 100, ground));
+            this.scene = scene;
+            this.renderSettings = renderSettings;
+            this.rayTracer = new RayTracer(renderSettings);
+            this.outputManager = new OutputManager();
         }
 
 
         public void Render()
         {
-            rayTracer.Render(world);
+            Console.WriteLine("Starting ray tracing render...");
+
+            int[][] pixels = new int[this.renderSettings.ImageHeight * this.renderSettings.ImageWidth][];
+
+            for (int j = 0; j < this.renderSettings.ImageHeight; j++)
+            {
+                Console.WriteLine($"Scanlines remaining: {this.renderSettings.ImageHeight - j}");
+                for (int i = 0; i < this.renderSettings.ImageWidth; i++)
+                {
+                    Color3 pixelColor = Color3.Black;
+
+                    for (int sample = 0; sample < this.renderSettings.SamplesPerPixel; sample++)
+                    {
+                        Ray ray = this.scene.Camera.GetRayForPixel(i, j);
+                        pixelColor += this.rayTracer.CalculateRayColor(ray, 0, this.scene.World);
+                    }
+
+                    pixelColor = this.renderSettings.SampleScale * pixelColor;
+                    int[] pixel = pixelColor.ToRGB();
+
+                    pixels[j * this.renderSettings.ImageWidth + i] = pixel;
+                }
+            }
+
+            this.outputManager.WriteOutput(this.renderSettings.ImageHeight, this.renderSettings.ImageWidth, pixels);
+            Console.WriteLine("Rendering Complete");
         }
 
     }
