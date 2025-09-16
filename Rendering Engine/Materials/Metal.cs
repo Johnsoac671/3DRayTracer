@@ -7,6 +7,9 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine.Materials
 {
+    /// <summary>
+    /// Represents a reflective, metallic material.
+    /// </summary>
     public class Metal : Material
     {
         public Color3 Albedo { get; }
@@ -18,6 +21,11 @@ namespace Rendering_Engine.Materials
             this.Roughness = roughness < 1 ? roughness : 1;
         }
 
+        /// <summary>
+        /// Calculates the scattered ray for a metal material.
+        /// The ray is reflected off the surface, with the reflection direction
+        /// perturbed by the roughness of the material.
+        /// </summary>
         public override Ray Scatter(Ray r, HitRecord record, ref Color3 attenunation)
         {
             Vector3 reflected = Vector3.Reflect(r.Direction, record.Normal);

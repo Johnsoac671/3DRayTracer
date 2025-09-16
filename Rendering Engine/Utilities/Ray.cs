@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Rendering_Engine.Utilities
 {
+    /// <summary>
+    /// A class representing a light ray in the scene
+    /// </summary>
     public class Ray
     {
         private Point3 origin;

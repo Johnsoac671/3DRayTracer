@@ -7,6 +7,9 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine
 {
+    /// <summary>
+    /// A list of all the objects in the scene that can be rendered.
+    /// </summary>
     public class RenderableList : IRenderable
     {
         public List<IRenderable> Objects {  get; private set; }
@@ -21,6 +24,9 @@ namespace Rendering_Engine
             Objects.Add(obj);
         }
 
+        /// <summary>
+        /// Checks if a ray hits any of the objects in the list.
+        /// </summary>
         public bool IsHit(Ray r, Interval rayT, ref HitRecord record)
         {
             HitRecord temp = new HitRecord();

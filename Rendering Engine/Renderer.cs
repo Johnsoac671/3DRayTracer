@@ -11,6 +11,10 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine
 {
+    /// <summary>
+    /// Orchestrates the entire rendering process.
+    /// This class brings together the scene, camera, and ray tracing logic to generate the final image.
+    /// </summary>
     public class Renderer
     {
         private Scene scene;
@@ -26,7 +30,9 @@ namespace Rendering_Engine
             this.outputManager = new OutputManager();
         }
 
-
+        /// <summary>
+        /// Renders the scene by iterating through each pixel, generating rays, and calculating the final color.
+        /// </summary>
         public void Render()
         {
             Console.WriteLine("Starting ray tracing render...");

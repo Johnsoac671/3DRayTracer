@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace Rendering_Engine.Utilities
 {
-    
+    /// <summary>
+    /// A class representing a vector in 3D space, with X, Y, and Z components
+    /// </summary>
     public class Vector3
     {
 

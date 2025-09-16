@@ -10,6 +10,11 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine
 {
+
+    /// <summary>
+    /// Handles the core ray tracing logic.
+    /// This class is responsible for calculating the color of each ray by tracing its path through the scene.
+    /// </summary>
     public class RayTracer
     {
         private RenderSettings renderSettings;
@@ -19,6 +24,11 @@ namespace Rendering_Engine
             this.renderSettings = renderSettings;
         }
 
+        /// <summary>
+        /// Recursively calculates the color of a ray.
+        /// The method traces the ray through the scene, and each time it hits an object,
+        /// it scatters the ray based on the material properties until the maximum depth is reached.
+        /// </summary>
         public Color3 CalculateRayColor(Ray ray, int depth, IRenderable world)
         {
             if (depth >= renderSettings.MaxDepth)

@@ -7,6 +7,9 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine.Materials
 {
+    /// <summary>
+    /// Represents a matte, non-reflective material.
+    /// </summary>
     public class Diffuse : Material
     {
         private Color3 albedo;
@@ -23,6 +26,10 @@ namespace Rendering_Engine.Materials
             }
         }
 
+        /// <summary>
+        /// Calculates the scattered ray for a diffuse material.
+        /// The ray is scattered in a random direction from the hit point.
+        /// </summary>
         public override Ray Scatter(Ray r, HitRecord record, ref Color3 attenuation)
         {
             Vector3 scatterDirection = record.Normal + Vector3.RandomUnitVector();

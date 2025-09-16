@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Rendering_Engine.Utilities
 {
+    /// <summary>
+    /// a class representing a color as a vector in 3D space, with R, G, and B components
+    /// </summary>
     public class Color3 : Vector3
     {
         public double R

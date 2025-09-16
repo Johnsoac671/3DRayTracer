@@ -9,6 +9,10 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine
 {
+    /// <summary>
+    /// Represents the virtual camera in the scene.
+    /// This class is responsible for generating rays from the camera's position through each pixel of the viewport.
+    /// </summary>
     public class Camera
     {
         private CameraSettings cameraSettings;
@@ -34,6 +38,10 @@ namespace Rendering_Engine
             Initialize();
         }
 
+        /// <summary>
+        /// Initializes the camera's properties based on the provided settings.
+        /// This method calculates the viewport dimensions, pixel deltas, and defocus disk vectors.
+        /// </summary>
         private void Initialize()
         {
             this.center = cameraSettings.LookFrom;
@@ -62,6 +70,9 @@ namespace Rendering_Engine
             this.defocusDiskV = v * defocusRadius;
         }
 
+        /// <summary>
+        /// Generates a ray for a specific pixel in the viewport.
+        /// </summary>
         public Ray GetRayForPixel(int i, int j)
         {
             Vector3 offset = GetSampleVector();
@@ -73,6 +84,9 @@ namespace Rendering_Engine
             return new Ray(rayOrigin, sampleLocation - rayOrigin);
         }
 
+        /// <summary>
+        /// If needed, returns a sample with a shift relative to the focal values of the camera
+        /// </summary>
         private Point3 GetDefocusSample()
         {
             Vector3 p = Vector3.RandomUnitOnDisk();

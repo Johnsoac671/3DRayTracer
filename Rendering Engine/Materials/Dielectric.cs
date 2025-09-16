@@ -7,6 +7,9 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine.Materials
 {
+    /// <summary>
+    /// Represents a transparent material that refracts and reflects light, such as glass.
+    /// </summary>
     public class Dielectric : Material
     {
         public double IOR { get; }
@@ -16,6 +19,11 @@ namespace Rendering_Engine.Materials
             this.IOR = indexOfRefraction;
         }
 
+        /// <summary>
+        /// Calculates the scattered ray for a dielectric material.
+        /// This method handles both refraction and reflection, using the Schlick approximation
+        /// to determine the ratio of reflection to refraction.
+        /// </summary>
         public override Ray Scatter(Ray ray, HitRecord record, ref Color3 attenuation)
         {
             attenuation = new Color3(1.0, 1.0, 1.0);
@@ -42,6 +50,9 @@ namespace Rendering_Engine.Materials
             return new Ray(record.Location, direction);
         }
 
+        /// <summary>
+        /// An approximation for the amount of light that is reflected off a surface.
+        /// </summary>
         public static double SchlickApprox(double cos, double IOR)
         {
             double r0 = (1 - IOR) / (1 + IOR);

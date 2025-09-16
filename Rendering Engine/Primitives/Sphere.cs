@@ -8,6 +8,9 @@ using Rendering_Engine.Utilities;
 
 namespace Rendering_Engine.Primitives
 {
+    /// <summary>
+    /// Represents a sphere object in the scene.
+    /// </summary>
     public class Sphere : IRenderable
     {
         private Point3 center;
@@ -21,6 +24,10 @@ namespace Rendering_Engine.Primitives
             this.material = material;
         }
 
+        /// <summary>
+        /// Determines if a ray intersects with the sphere.
+        /// This method uses the ray-sphere intersection formula to find the hit point.
+        /// </summary>
         public bool IsHit(Ray r, Interval rayT, ref HitRecord record)
         {
             Vector3 oc = this.center - r.Origin;

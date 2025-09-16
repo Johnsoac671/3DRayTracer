@@ -7,6 +7,9 @@ using Rendering_Engine.Materials;
 
 namespace Rendering_Engine.Utilities
 {
+    /// <summary>
+    /// a class for storing information about a collision between a light ray and a renderable object
+    /// </summary>
     public class HitRecord
     {
         private Point3 location;
