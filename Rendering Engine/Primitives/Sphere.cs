@@ -13,13 +13,20 @@ namespace Rendering_Engine.Primitives
     /// </summary>
     public class Sphere : IRenderable
     {
-        private Point3 center;
+        private Ray center;
         private double radius;
         private Material material;
 
         public Sphere(Point3 center, double radius, Material material)
         {
-            this.center = center;
+            this.center = new Ray(center, new Vector3(0, 0, 0));
+            this.radius = radius;
+            this.material = material;
+        }
+
+        public Sphere(Point3 startLocation, Point3 endLocation, double radius, Material material)
+        {
+            this.center = new Ray(startLocation, endLocation - startLocation);
             this.radius = radius;
             this.material = material;
         }
@@ -30,7 +37,8 @@ namespace Rendering_Engine.Primitives
         /// </summary>
         public bool IsHit(Ray r, Interval rayT, ref HitRecord record)
         {
-            Vector3 oc = this.center - r.Origin;
+            Point3 currentLocation = this.center.PointAtTime(r.Time);
+            Vector3 oc = currentLocation - r.Origin;
             var a = r.Direction.SquaredLength;
             var h = Vector3.Dot(r.Direction, oc);
             var c = oc.SquaredLength - radius * radius;
@@ -59,7 +67,7 @@ namespace Rendering_Engine.Primitives
             record.Location = r.PointAtTime(root);
             record.Material = this.material;
 
-            Vector3 outwardNormal = (record.Location - center) / radius;
+            Vector3 outwardNormal = (record.Location - currentLocation) / radius;
             record.SetFaceNormal(r, outwardNormal);
 
             return true;
