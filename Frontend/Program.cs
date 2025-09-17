@@ -31,7 +31,7 @@ namespace Frontend
 
 
             world.Add(new Sphere(new Point3(0.0, -100.5, -1.0), 100.0, groundMaterial));
-            world.Add(new Sphere(new Point3(0.0, 0.0, -1.0), 0.5, centerMaterial));
+            world.Add(new Sphere(new Point3(0.0, 0.0, -1.0), new Point3(0.0, 1.0, -1.0), 0.5, centerMaterial));
             world.Add(new Sphere(new Point3(-1.0, 0.0, -1.0), 0.5, leftMaterial));
             world.Add(new Sphere(new Point3(1.0, 0.0, -1.0), 0.5, rightMaterial));
 
