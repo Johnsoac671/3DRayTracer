@@ -11,7 +11,7 @@ using Rendering_Engine.Primitives;
 namespace Frontend
 {
     internal class Program
-    {
+    {/// TODO: clean out logic code from frontend :(
         public static void Main(string[] args)
         {
             // 1. Create Settings
