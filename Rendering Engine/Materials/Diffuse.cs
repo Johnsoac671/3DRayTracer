@@ -30,7 +30,7 @@ namespace Rendering_Engine.Materials
         /// Calculates the scattered ray for a diffuse material.
         /// The ray is scattered in a random direction from the hit point.
         /// </summary>
-        public override Ray Scatter(Ray r, HitRecord record, ref Color3 attenuation)
+        public override Ray Scatter(Ray ray, HitRecord record, ref Color3 attenuation)
         {
             Vector3 scatterDirection = record.Normal + Vector3.RandomUnitVector();
 
@@ -39,7 +39,7 @@ namespace Rendering_Engine.Materials
                 scatterDirection = record.Normal;
             }
 
-            Ray scatteredRay = new Ray(record.Location, scatterDirection);
+            Ray scatteredRay = new Ray(record.Location, scatterDirection, ray.Time);
             attenuation = this.Albedo;
 
             return scatteredRay;

@@ -26,11 +26,11 @@ namespace Rendering_Engine.Materials
         /// The ray is reflected off the surface, with the reflection direction
         /// perturbed by the roughness of the material.
         /// </summary>
-        public override Ray Scatter(Ray r, HitRecord record, ref Color3 attenunation)
+        public override Ray Scatter(Ray ray, HitRecord record, ref Color3 attenunation)
         {
-            Vector3 reflected = Vector3.Reflect(r.Direction, record.Normal);
+            Vector3 reflected = Vector3.Reflect(ray.Direction, record.Normal);
             reflected = Vector3.UnitVector(reflected) + (this.Roughness * Vector3.RandomUnitVector());
-            Ray scatteredRay = new Ray(record.Location, reflected);
+            Ray scatteredRay = new Ray(record.Location, reflected, ray.Time);
             attenunation = this.Albedo;
 
             return scatteredRay;

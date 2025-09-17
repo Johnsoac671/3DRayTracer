@@ -47,7 +47,7 @@ namespace Rendering_Engine.Materials
                 direction = Vector3.Refract(unit, record.Normal, ri);
             }
 
-            return new Ray(record.Location, direction);
+            return new Ray(record.Location, direction, ray.Time);
         }
 
         /// <summary>
