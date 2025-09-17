@@ -81,7 +81,9 @@ namespace Rendering_Engine
                 + ((j + offset.Y) * this.pixelDeltaV);
 
             Point3 rayOrigin = (this.cameraSettings.FocusAngle <= 0) ? this.center : GetDefocusSample();
-            return new Ray(rayOrigin, sampleLocation - rayOrigin);
+            double rayTime = this.random.NextDouble();
+
+            return new Ray(rayOrigin, sampleLocation - rayOrigin, rayTime);
         }
 
         /// <summary>
